@@ -17,19 +17,19 @@ public class RandomSelector implements Runnable{
 	}
 	
 	public void run() {
-		lock.lock();
-		
+		lock.lock();	
 		try{
-			//System.out.println("test1");
 			while(!airplane.isFull()){	//airplane is not full
-				//System.out.println("test2");
 				Thread.sleep(Booking.DELAY);
+				
+				//selecting seat randomly
 				int[] seat = generateSeat();	//random 2-tuple of row, column
 				
 				int row = seat[0];
 				int col = seat[1];
 				System.out.println("row = " + row);
 				System.out.println("col = " + col);
+				//
 				
 				airplane.toggleSeat(row, col, this.id);	//modify corresponding airplane with generated seat 2-tuple
 			}

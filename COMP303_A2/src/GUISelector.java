@@ -1,3 +1,5 @@
+import java.util.concurrent.locks.ReentrantLock;
+
 /**
  * 
  * @author Anurag Kalra
@@ -6,6 +8,7 @@
 public class GUISelector implements Runnable{
 	private final int id;
 	private Airplane airplane;
+	private final ReentrantLock lock = new ReentrantLock();
 	
 	public GUISelector(int aId, Airplane aAirplane){
 		id = aId;
@@ -13,13 +16,22 @@ public class GUISelector implements Runnable{
 	}
 	
 	public void run() {
+		lock.lock();
 		try{
-			while(!this.airplane.isFull()){	//airplane is not full
-				this.airplane.toggleSeat(1, 1, this.id);	//modify corresponding airplane with generated seat 2-tuple
-				Thread.sleep(Booking.DELAY);
+			while(!airplane.isFull()){	//airplane is not full
+				if(airplane.getIsClicked()){
+					Thread.sleep(Booking.DELAY);
+					//modify corresponding airplane with generated seat 2-tuple
+					System.out.println("row = " + airplane.getRowMan());
+					System.out.println("col = " + airplane.getColMan());
+					airplane.toggleSeat(airplane.getRowMan(), airplane.getColMan(), this.id);
+				}
 			}
 		}catch(InterruptedException e){
 			Thread.currentThread().interrupt();
+		}finally{
+			lock.unlock();
 		}
+
 	}
 }

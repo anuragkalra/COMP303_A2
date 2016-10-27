@@ -13,14 +13,14 @@ public class Booking {
 		
 		Runnable r1 = new RandomSelector(1, a);
 		Runnable r2 = new RandomSelector(2, a);
-		//Runnable r3 = new GUISelector(3, a);
+		Runnable r3 = new GUISelector(3, a);
 		
 		Thread t1 = new Thread(r1);
 		Thread t2 = new Thread(r2);
-		//Thread t3 = new Thread(r3);
+		Thread t3 = new Thread(r3);
 		
 		t1.start();	//start random1
 		t2.start();	//start random2
-		//t3.start();	//start manual1
+		t3.start();	//start manual1
 	}
 }

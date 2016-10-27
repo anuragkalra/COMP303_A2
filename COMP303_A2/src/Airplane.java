@@ -12,11 +12,12 @@ import javax.swing.*;
  * Stores info and data structure elements of the Airplane object
  */
 public class Airplane {
-	private final static int ROWS = 5;
-	private final static int COLUMNS = 3;
+	private final static int ROWS = 20;
+	private final static int COLUMNS = 4;
 	
 	private static int[][] seats = new int[ROWS][COLUMNS];
 	private JTable table = new JTable(ROWS, COLUMNS);
+	private boolean isClicked = false;
 	
 	private int rowMan;
 	private int colMan;
@@ -72,6 +73,7 @@ public class Airplane {
 		confirmButton.addActionListener(new
 			ActionListener(){
 				public void actionPerformed(ActionEvent event){
+					isClicked = true;
 					String rowText = rowSelect.getText();
 					String colText = colSelect.getText();
 					int rowSelection = Integer.parseInt(rowText);
@@ -121,19 +123,35 @@ public class Airplane {
 		return ROWS;
 	}
 	
+	/**
+	 * Getter for rowMan field
+	 * @return rowMan value
+	 */
 	public int getRowMan(){
 		return rowMan;
 	}
 	
+	/**
+	 * getter for colMan field.
+	 * @return colMan value
+	 */
 	public int getColMan(){
 		return colMan;
+	}
+	
+	/**
+	 * getter for isClicked variable
+	 * @return true if isClicked is true, false otherwise
+	 */
+	public boolean getIsClicked(){
+		return isClicked;
 	}
 	
 	/**
 	 * Notifies whether the airplane is full or not.
 	 * @return true if it finds a 0 inside the seating chart (empty seat).
 	 */
-	public boolean isFull(){
+	public synchronized boolean isFull(){
 		boolean isFull = true;
 		for(int row = 0; row < ROWS; row++){
 			for(int col = 0; col < COLUMNS; col++){
@@ -149,7 +167,7 @@ public class Airplane {
 	 * Fills up a JTable with 0's to signify and empty (new) plane.
 	 * @param t The table to fill up.
 	 */
-	private void updateTable(int row, int col, int id, JTable t){
+	private synchronized void updateTable(int row, int col, int id, JTable t){
 		t.setValueAt(id, row, col);
 	}
 	
