@@ -3,7 +3,6 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import javax.swing.*;
 
 /**
@@ -33,8 +32,7 @@ public class Airplane {
 		JPanel tablePanel = new JPanel();
 		tablePanel.setLayout(new FlowLayout());
 		
-		table.setGridColor(Color.GREEN);
-		table.setBackground(Color.ORANGE);
+		table.setGridColor(Color.BLACK);
 		
 		//BUILD TABLE PANEL
 		tablePanel.add(table);
@@ -67,6 +65,8 @@ public class Airplane {
 		columnPanel.add(colLabel);
 		columnPanel.add(colSelect);
 		
+		//SELECTION MESSAGE
+		JLabel confirmMessage = new JLabel("");
 		
 		//CONFIRMATION BUTTON + action listener
 		JButton confirmButton = new JButton("Confirm seat");
@@ -76,17 +76,38 @@ public class Airplane {
 					isClicked = true;
 					String rowText = rowSelect.getText();
 					String colText = colSelect.getText();
+					
+					if(!isNumeric(rowText) || !isNumeric(colText)){
+						System.out.println(">Improperly formatted");
+						confirmMessage.setText("Improperly formatted");
+						return;
+					}
+					
 					int rowSelection = Integer.parseInt(rowText);
 					int colSelection = Integer.parseInt(colText);
 					
-					rowMan = rowSelection;
-					colMan = colSelection;
+					
+					if(rowSelection >= ROWS || colSelection >= COLUMNS){	//OUT OF BOUNDS
+						System.out.println(">Illegal Seat");
+						confirmMessage.setText("Illegal Seat");
+						return;
+					}
+					if(!seatAvailable(rowSelection, colSelection)){	//IF THE SEAT IS TAKEN	
+						System.out.println(">Seat Taken");
+						confirmMessage.setText("Seat Taken");
+						return;
+					}
+					else{	//OKAY
+						System.out.println(">Valid");
+						confirmMessage.setText("Confirmed");
+						rowMan = rowSelection;
+						colMan = colSelection;
+						return;
+					}
+					
 				}
 			});
 		
-		
-		//SELECTION MESSAGE
-		JLabel confirmMessage = new JLabel("<message>");
 		
 		//BUILD SELECTION PANEL
 		selectionPanel.add(rowPanel);
@@ -106,7 +127,7 @@ public class Airplane {
 		
 		frame.setVisible(true);
 	}
-	
+
 	/**
 	 * Getter for COLUMNS field.
 	 * @return number of columns in plane.
@@ -147,6 +168,7 @@ public class Airplane {
 		return isClicked;
 	}
 	
+
 	/**
 	 * Notifies whether the airplane is full or not.
 	 * @return true if it finds a 0 inside the seating chart (empty seat).
@@ -177,10 +199,25 @@ public class Airplane {
 	 * @param column
 	 */
 	public synchronized void toggleSeat(int row, int column, int threadID) throws InterruptedException{
-		if(seatAvailable(row, column)){
+		if(seatAvailable(row, column)){	//if the seat is available, toggle it
 			seats[row][column] = threadID;
 			updateTable(row, column, threadID, table);
 		}
+	}
+	
+	/**
+	 * Helper method to validate whether user input is numeric or not
+	 * @param str the String to validate.
+	 * @return true if is numeric, false otherwise.
+	 */
+	private static boolean isNumeric(String str){
+		try{  
+			int d = Integer.parseInt(str);  
+		}
+		catch(NumberFormatException nfe){  
+			return false;  
+		}
+		return true;  
 	}
 	
 	/**
@@ -196,4 +233,5 @@ public class Airplane {
 			return true;	//if the seat is empty return true
 		}
 	}
+
 }
