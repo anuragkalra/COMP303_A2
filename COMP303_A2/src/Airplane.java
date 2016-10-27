@@ -26,7 +26,7 @@ public class Airplane {
 	private int colMan;	//COLUMN SELECTED MANUALLY
 	
 	/**
-	 * Constructor for the Airplane class and builds GUI.
+	 * Constructor for the Airplane class and builds GUI. Broken up into Table and Selection panels.
 	 */
 	public Airplane(){
 		
@@ -106,7 +106,7 @@ public class Airplane {
 					int colSelection = Integer.parseInt(colText);
 					
 					
-					if(rowSelection >= ROWS || colSelection >= COLUMNS){	//IF OUT OF BOUNDS
+					if(rowSelection < 0 || rowSelection >= ROWS || colSelection < 0 || colSelection >= COLUMNS){	//IF OUT OF BOUNDS
 						System.out.println(">Illegal Seat");
 						confirmMessage.setText("Illegal Seat");
 						rowMan = -1;	//ERROR CASE: put in out of bounds
@@ -122,9 +122,9 @@ public class Airplane {
 					}
 					else{	//IF COMPLETELY VALID
 						System.out.println(">Valid");
-						confirmMessage.setText("Confirmed");
 						rowMan = rowSelection;
 						colMan = colSelection;
+						confirmMessage.setText("Confirmed Seat: {" + rowMan + "," + colMan + "}");
 						return;
 					}
 					
@@ -218,7 +218,7 @@ public class Airplane {
 	}
 	
 	/**
-	 * Modify a seat on the plane to contain the ID of the thing that selects it. 
+	 * Modify a seat on the plane to contain the ID of the thing that selects it.
 	 * @param row the row to modify
 	 * @param column the column to modify
 	 * @param threadID the threadID of the modifying thread

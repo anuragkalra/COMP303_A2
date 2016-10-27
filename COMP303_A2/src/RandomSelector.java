@@ -33,9 +33,6 @@ public class RandomSelector implements Runnable{
 				
 				int row = seat[0];
 				int col = seat[1];
-				//System.out.println("row = " + row);
-				//System.out.println("col = " + col);
-				//
 				
 				airplane.toggleSeat(row, col, this.id);	//modify corresponding airplane with generated seat 2-tuple
 			}
@@ -49,7 +46,10 @@ public class RandomSelector implements Runnable{
 		
 	}
 	
-	
+	/**
+	 * Generates a random seat pair within bounds specified by Airplane constants
+	 * @return a randomly generated 2-tuple of {row,column}
+	 */
 	private int[] generateSeat(){
 		Random rand = new Random();
 		int row = rand.nextInt(Airplane.getRows());
