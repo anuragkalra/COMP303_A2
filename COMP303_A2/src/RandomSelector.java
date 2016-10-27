@@ -1,21 +1,27 @@
 import java.util.*;
 import java.util.concurrent.locks.ReentrantLock;
 /**
- * 
+ * Selects a random seat in the airplane and updates with ID.
  * @author Anurag Kalra
- * Selects a random seat in the airline.
- * Modifies airplane data structure.
  */
 public class RandomSelector implements Runnable{
 	private final int id;
 	private Airplane airplane;
 	private final ReentrantLock lock = new ReentrantLock();
 	
+	/**
+	 * Constructor for RandomSelector
+	 * @param aId the ID that is saved with the seat reservation.
+	 * @param aAirplane the Airplane object that the seat corresponds to.
+	 */
 	public RandomSelector(int aId, Airplane aAirplane){
 		id = aId;
 		airplane = aAirplane;
 	}
 	
+	/**
+	 * Updates seats in the plan in a random manner, placing ID in seat position.
+	 */
 	public void run() {
 		lock.lock();	
 		try{

@@ -1,20 +1,27 @@
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
- * 
+ * Selects a specified seat in the airline through the UI
  * @author Anurag Kalra
- * Selects a specified seat in the airline
  */
 public class GUISelector implements Runnable{
 	private final int id;
 	private Airplane airplane;
 	private final ReentrantLock lock = new ReentrantLock();
 	
+	/**
+	 * Constructor for the GUISelector.
+	 * @param aId the ID that is saved with the seat reservation.
+	 * @param aAirplane the Airplane object that the seat corresponds to.
+	 */
 	public GUISelector(int aId, Airplane aAirplane){
 		id = aId;
 		airplane = aAirplane;
 	}
 	
+	/**
+	 * Updates seats in plane given input from the UI
+	 */
 	public void run() {
 		lock.lock();
 		try{

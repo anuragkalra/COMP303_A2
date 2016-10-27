@@ -1,12 +1,11 @@
 import javax.swing.*;
 import java.util.*;
 /**
- * 
+ * A class to facilitate all operations of the airplane and seat selection.
  * @author Anurag Kalra
- *
  */
 public class Booking {
-	public final static int DELAY = 1000;
+	public final static int DELAY = 1000;	//THE AMOUNT OF SLEEP TIME FOR ALL THREADS (1000 MS BY DEFAULT).
 	
 	public static void main(String[] args){
 		Airplane a = new Airplane();	//keeps GUI

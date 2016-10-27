@@ -6,16 +6,15 @@ import java.awt.event.ActionListener;
 import javax.swing.*;
 
 /**
- * 
- * @author Anurag Kalra
  * Stores info and data structure elements of the Airplane object
+ * @author Anurag Kalra
  */
 public class Airplane {
 	private final static int ROWS = 50;	//NUMBER OF ROWS IN THE AIRPLANE
 	private final static int COLUMNS = 4;	//NUMBER OF SEATS PER ROW IN AIRPLANE
 	
 	private static int[][] seats = new int[ROWS][COLUMNS];	//DATA STRUCTURE TO REPRESENT THE SEATS
-	private JTable table = new JTable(ROWS, COLUMNS){
+	private JTable table = new JTable(ROWS, COLUMNS){	//DISABLES JTABLE FROM EDITING THROUGH THE UI
 		public boolean isCellEditable(int row, int column){
 			return false;
 		}
@@ -94,7 +93,7 @@ public class Airplane {
 					String rowText = rowSelect.getText();
 					String colText = colSelect.getText();
 					
-					if(!isNumeric(rowText) || !isNumeric(colText)){
+					if(!isNumeric(rowText) || !isNumeric(colText)){	//IF INPUT IS NON NUMERIC
 						System.out.println(">Improperly formatted");
 						confirmMessage.setText("Improperly formatted");
 						rowMan = -1;
@@ -102,11 +101,12 @@ public class Airplane {
 						return;
 					}
 					
+					//PARSES THE USER INPUT (ASSUMES THAT IT IS A NUMBER
 					int rowSelection = Integer.parseInt(rowText);
 					int colSelection = Integer.parseInt(colText);
 					
 					
-					if(rowSelection >= ROWS || colSelection >= COLUMNS){	//OUT OF BOUNDS
+					if(rowSelection >= ROWS || colSelection >= COLUMNS){	//IF OUT OF BOUNDS
 						System.out.println(">Illegal Seat");
 						confirmMessage.setText("Illegal Seat");
 						rowMan = -1;	//ERROR CASE: put in out of bounds
@@ -120,7 +120,7 @@ public class Airplane {
 						colMan = -1;
 						return;
 					}
-					else{	//OKAY
+					else{	//IF COMPLETELY VALID
 						System.out.println(">Valid");
 						confirmMessage.setText("Confirmed");
 						rowMan = rowSelection;
@@ -142,12 +142,13 @@ public class Airplane {
 		frame.add(tablePanel);
 		frame.add(selectionPanel);
 		
+		//VISUAL SETTINGS
 		frame.setSize(200, 500);
 		frame.setLocationRelativeTo(null);
-		
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.pack();
 		
+		//PRESENT
 		frame.setVisible(true);
 	}
 
@@ -218,8 +219,10 @@ public class Airplane {
 	
 	/**
 	 * Modify a seat on the plane to contain the ID of the thing that selects it. 
-	 * @param row
-	 * @param column
+	 * @param row the row to modify
+	 * @param column the column to modify
+	 * @param threadID the threadID of the modifying thread
+	 * @throws InterruptedException when interrupted
 	 */
 	public synchronized void toggleSeat(int row, int column, int threadID) throws InterruptedException{
 		if(!(row >= 0 && row < ROWS) || !(column >= 0 && column < COLUMNS)){	//IF ILLEGAL
@@ -248,8 +251,8 @@ public class Airplane {
 	
 	/**
 	 * Tells if seat is available
-	 * @param row
-	 * @param column
+	 * @param row the row we are checking
+	 * @param column the column we are checking
 	 * @return true if the seat is empty, false if not.
 	 */
 	private synchronized boolean seatAvailable(int row, int column){
