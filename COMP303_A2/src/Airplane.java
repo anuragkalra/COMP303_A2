@@ -1,10 +1,10 @@
 import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
 
 /**
  * 
@@ -12,11 +12,18 @@ import javax.swing.table.TableModel;
  * Stores info and data structure elements of the Airplane object
  */
 public class Airplane {
-	private final int ROWS = 20;
-	private final int COLUMNS = 3;
+	private final static int ROWS = 5;
+	private final static int COLUMNS = 3;
 	
-	private int[][] seats = new int[ROWS][COLUMNS];
-
+	private static int[][] seats = new int[ROWS][COLUMNS];
+	private JTable table = new JTable(ROWS, COLUMNS);
+	
+	private int rowMan;
+	private int colMan;
+	
+	/**
+	 * Constructor for the Airplane class and builds GUI.
+	 */
 	public Airplane(){
 		JFrame frame = new JFrame();
 		frame.setLayout(new FlowLayout());
@@ -24,10 +31,6 @@ public class Airplane {
 		//TABLE PANEL
 		JPanel tablePanel = new JPanel();
 		tablePanel.setLayout(new FlowLayout());
-		
-		//TABLE INFO
-		JTable table = new JTable(ROWS, COLUMNS);
-		this.initTable(table);
 		
 		table.setGridColor(Color.GREEN);
 		table.setBackground(Color.ORANGE);
@@ -64,8 +67,21 @@ public class Airplane {
 		columnPanel.add(colSelect);
 		
 		
-		//CONFIRMATION BUTTON
+		//CONFIRMATION BUTTON + action listener
 		JButton confirmButton = new JButton("Confirm seat");
+		confirmButton.addActionListener(new
+			ActionListener(){
+				public void actionPerformed(ActionEvent event){
+					String rowText = rowSelect.getText();
+					String colText = colSelect.getText();
+					int rowSelection = Integer.parseInt(rowText);
+					int colSelection = Integer.parseInt(colText);
+					
+					rowMan = rowSelection;
+					colMan = colSelection;
+				}
+			});
+		
 		
 		//SELECTION MESSAGE
 		JLabel confirmMessage = new JLabel("<message>");
@@ -86,8 +102,6 @@ public class Airplane {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.pack();
 		
-		table.setValueAt(2, 2, 0);
-		
 		frame.setVisible(true);
 	}
 	
@@ -95,28 +109,48 @@ public class Airplane {
 	 * Getter for COLUMNS field.
 	 * @return number of columns in plane.
 	 */
-	public int getColumns(){
-		return this.COLUMNS;
+	public static int getColumns(){
+		return COLUMNS;
 	}
 	
 	/**
 	 * Getter for ROWS field
 	 * @return number of rows in plane.
 	 */
-	public int getRows(){
-		return this.ROWS;
+	public static int getRows(){
+		return ROWS;
+	}
+	
+	public int getRowMan(){
+		return rowMan;
+	}
+	
+	public int getColMan(){
+		return colMan;
+	}
+	
+	/**
+	 * Notifies whether the airplane is full or not.
+	 * @return true if it finds a 0 inside the seating chart (empty seat).
+	 */
+	public boolean isFull(){
+		boolean isFull = true;
+		for(int row = 0; row < ROWS; row++){
+			for(int col = 0; col < COLUMNS; col++){
+				if(seats[row][col] == 0){
+					return false;
+				}
+			}
+		}
+		return isFull;
 	}
 	
 	/**
 	 * Fills up a JTable with 0's to signify and empty (new) plane.
 	 * @param t The table to fill up.
 	 */
-	private void initTable(JTable t){
-		for(int col = 0; col < this.COLUMNS; col++){
-			for(int row = 0; row < this.ROWS; row++){
-				t.setValueAt(seats[row][col], row, col);
-			}
-		}
+	private void updateTable(int row, int col, int id, JTable t){
+		t.setValueAt(id, row, col);
 	}
 	
 	/**
@@ -124,8 +158,11 @@ public class Airplane {
 	 * @param row
 	 * @param column
 	 */
-	public synchronized void toggleSeat(int row, int column){
-		
+	public synchronized void toggleSeat(int row, int column, int threadID) throws InterruptedException{
+		if(seatAvailable(row, column)){
+			seats[row][column] = threadID;
+			updateTable(row, column, threadID, table);
+		}
 	}
 	
 	/**
