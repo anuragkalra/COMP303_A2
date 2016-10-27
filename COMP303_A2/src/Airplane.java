@@ -11,15 +11,20 @@ import javax.swing.*;
  * Stores info and data structure elements of the Airplane object
  */
 public class Airplane {
-	private final static int ROWS = 50;
-	private final static int COLUMNS = 4;
+	private final static int ROWS = 50;	//NUMBER OF ROWS IN THE AIRPLANE
+	private final static int COLUMNS = 4;	//NUMBER OF SEATS PER ROW IN AIRPLANE
 	
-	private static int[][] seats = new int[ROWS][COLUMNS];
-	private JTable table = new JTable(ROWS, COLUMNS);
-	private boolean isClicked = false;
+	private static int[][] seats = new int[ROWS][COLUMNS];	//DATA STRUCTURE TO REPRESENT THE SEATS
+	private JTable table = new JTable(ROWS, COLUMNS){
+		public boolean isCellEditable(int row, int column){
+			return false;
+		}
+	};
 	
-	private int rowMan;
-	private int colMan;
+	private boolean isClicked = false;	//TOGGLED WHEN THE CONFIRM BUTTON HAS BEEN CLICKED 
+	
+	private int rowMan;	//ROW SELECTED MANUALLY
+	private int colMan;	//COLUMN SELECTED MANUALLY
 	
 	/**
 	 * Constructor for the Airplane class and builds GUI.
@@ -61,6 +66,7 @@ public class Airplane {
 		//COLUMN PANEL
 		JPanel columnPanel = new JPanel();
 		columnPanel.setLayout(new FlowLayout());
+		
 		//COLUMN LABEL + TEXTFIELD
 		JLabel colLabel = new JLabel("Select column:");
 		JTextField colSelect = new JTextField(2);
@@ -69,8 +75,15 @@ public class Airplane {
 		columnPanel.add(colLabel);
 		columnPanel.add(colSelect);
 		
+		//SELECTION MESSAGE PANEL
+		JPanel confirmMessagePanel = new JPanel();
+		confirmMessagePanel.setLayout(new FlowLayout());
+		
 		//SELECTION MESSAGE
-		JLabel confirmMessage = new JLabel("");
+		JLabel confirmMessage = new JLabel("", SwingConstants.CENTER);
+		
+		//BUILD SELECTION MESSAGE PANEL
+		confirmMessagePanel.add(confirmMessage);
 		
 		//CONFIRMATION BUTTON + action listener implementation
 		JButton confirmButton = new JButton("Confirm seat");
