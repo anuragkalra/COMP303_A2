@@ -92,6 +92,22 @@ public class Airplane {
 	}
 	
 	/**
+	 * Getter for COLUMNS field.
+	 * @return number of columns in plane.
+	 */
+	public int getColumns(){
+		return this.COLUMNS;
+	}
+	
+	/**
+	 * Getter for ROWS field
+	 * @return number of rows in plane.
+	 */
+	public int getRows(){
+		return this.ROWS;
+	}
+	
+	/**
 	 * Fills up a JTable with 0's to signify and empty (new) plane.
 	 * @param t The table to fill up.
 	 */
