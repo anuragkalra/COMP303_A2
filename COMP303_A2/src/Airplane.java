@@ -11,7 +11,7 @@ import javax.swing.*;
  * Stores info and data structure elements of the Airplane object
  */
 public class Airplane {
-	private final static int ROWS = 20;
+	private final static int ROWS = 50;
 	private final static int COLUMNS = 4;
 	
 	private static int[][] seats = new int[ROWS][COLUMNS];
@@ -25,13 +25,17 @@ public class Airplane {
 	 * Constructor for the Airplane class and builds GUI.
 	 */
 	public Airplane(){
+		
+		//FRAME BODY
 		JFrame frame = new JFrame();
 		frame.setLayout(new FlowLayout());
+		frame.setTitle("Anurag Airlines");
 		
 		//TABLE PANEL
 		JPanel tablePanel = new JPanel();
 		tablePanel.setLayout(new FlowLayout());
 		
+		//TABLE GRID COLOR SETTING
 		table.setGridColor(Color.BLACK);
 		
 		//BUILD TABLE PANEL
@@ -68,7 +72,7 @@ public class Airplane {
 		//SELECTION MESSAGE
 		JLabel confirmMessage = new JLabel("");
 		
-		//CONFIRMATION BUTTON + action listener
+		//CONFIRMATION BUTTON + action listener implementation
 		JButton confirmButton = new JButton("Confirm seat");
 		confirmButton.addActionListener(new
 			ActionListener(){
@@ -80,6 +84,8 @@ public class Airplane {
 					if(!isNumeric(rowText) || !isNumeric(colText)){
 						System.out.println(">Improperly formatted");
 						confirmMessage.setText("Improperly formatted");
+						rowMan = -1;
+						colMan = -1;
 						return;
 					}
 					
@@ -90,11 +96,15 @@ public class Airplane {
 					if(rowSelection >= ROWS || colSelection >= COLUMNS){	//OUT OF BOUNDS
 						System.out.println(">Illegal Seat");
 						confirmMessage.setText("Illegal Seat");
+						rowMan = -1;	//ERROR CASE: put in out of bounds
+						colMan = -1;
 						return;
 					}
 					if(!seatAvailable(rowSelection, colSelection)){	//IF THE SEAT IS TAKEN	
 						System.out.println(">Seat Taken");
 						confirmMessage.setText("Seat Taken");
+						rowMan = -1;	//ERROR CASE: put in out of bounds
+						colMan = -1;
 						return;
 					}
 					else{	//OKAY
@@ -115,7 +125,7 @@ public class Airplane {
 		selectionPanel.add(confirmButton);
 		selectionPanel.add(confirmMessage);
 		
-		//BUILD ENTIRE FRAME
+		//BUILD ENTIRE FRAME (tablePanel + selectionPanel)
 		frame.add(tablePanel);
 		frame.add(selectionPanel);
 		
@@ -199,6 +209,9 @@ public class Airplane {
 	 * @param column
 	 */
 	public synchronized void toggleSeat(int row, int column, int threadID) throws InterruptedException{
+		if(!(row >= 0 && row < ROWS) || !(column >= 0 && column < COLUMNS)){	//IF ILLEGAL
+			return;
+		}
 		if(seatAvailable(row, column)){	//if the seat is available, toggle it
 			seats[row][column] = threadID;
 			updateTable(row, column, threadID, table);

@@ -21,9 +21,6 @@ public class GUISelector implements Runnable{
 			while(!airplane.isFull()){	//airplane is not full
 				if(airplane.getIsClicked()){	//dont start this until the button is clicked
 					Thread.sleep(Booking.DELAY);
-					//modify corresponding airplane with generated seat 2-tuple
-					//System.out.println("row = " + airplane.getRowMan());
-					//System.out.println("col = " + airplane.getColMan());
 					airplane.toggleSeat(airplane.getRowMan(), airplane.getColMan(), this.id);
 				}
 			}
